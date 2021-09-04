@@ -6,13 +6,14 @@ import ru.netology.domain.Ticket;
 import ru.netology.repository.TicketRepository;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 @Data
 @AllArgsConstructor
 public class TicketSearchManager {
     private TicketRepository repository;
 
-    public Ticket[] findAll(String from, String to) {
+    public Ticket[] findAll(String from, String to, Comparator<Ticket> comparator) {
         Ticket[] tmp = new Ticket[0];
         for (Ticket t : repository.getAll()) {
             if (t.getDepartureFrom().equals(from) && t.getArrivalTo().equals(to)) {
@@ -22,7 +23,7 @@ public class TicketSearchManager {
                 tmp = newTmp;
             }
         }
-        Arrays.sort(tmp);
+        Arrays.sort(tmp, comparator);
         return tmp;
     }
 }

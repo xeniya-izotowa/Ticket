@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.domain.Ticket;
 import ru.netology.repository.TicketRepository;
+import ru.netology.domain.TicketComparator;
+
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,36 +31,28 @@ class TicketSearchManagerTest {
         repo.saveTicket(five);
         repo.saveTicket(six);
     }
-    @Test
-    void shouldFind() {
-        Ticket[] actual = manager.findAll("DME", "KZN");
-        Ticket[] expected = new Ticket[]{six};
-
-        assertArrayEquals(expected, actual);
-    }
 
     @Test
-    void shouldFindWhenParamsEqual() {
-        Ticket[] actual = manager.findAll("AYT", "LED");
-        Ticket[] expected = new Ticket[]{five, four};
-
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldFindAndSort() {
-        Ticket[] actual = manager.findAll("LED", "SVO");
+    void shouldFindAll() {
+        Ticket[] actual = manager.findAll("LED", "SVO", new TicketComparator());
         Ticket[] expected = new Ticket[]{two, three};
 
         assertArrayEquals(expected, actual);
     }
 
     @Test
-    void shouldReturnNull() {
-        Ticket[] actual = manager.findAll("SVO", "KBD");
-        Ticket[] expected = new Ticket[]{};
+    void shouldFindAllWithSameFlightTime() {
+        Ticket[] actual = manager.findAll("AYT", "LED", new TicketComparator());
+        Ticket[] expected = new Ticket[]{four, five};
 
         assertArrayEquals(expected, actual);
     }
 
+    @Test
+    void shouldNotFindWithWrongRequest() {
+        Ticket[] actual = manager.findAll("LED", "SMF", new TicketComparator());
+        Ticket[] expected =  new Ticket[]{};
+
+        assertArrayEquals(expected, actual);
+    }
 }
